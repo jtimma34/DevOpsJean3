@@ -9,7 +9,7 @@ pipeline{
                     agent any
                     steps{
                 echo 'cloning...'
-                        git 'https://github.com/theitern/DevOpsClassCodes.git'
+                        git 'https://github.com/olujlab/DevOpsClassCode.git'
                     }
                 }
                 stage('Compile'){
