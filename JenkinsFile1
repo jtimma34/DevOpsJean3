@@ -1,7 +1,7 @@
 new commit  pipeline{
  new chnage for commit   tools{
-        jdk 'myjava'
-        maven 'mymaven131'
+        jdk 'ourjava'
+        maven 'ourmaven'
     }
     //more commits on the file
     //commit on github-- new one
@@ -11,7 +11,7 @@ new commit  pipeline{
         stage('Checkout on git'){
             agent any
             steps{
-                git 'https://github.com/devops-trainer/DevOpsClassCodes.git'
+                git 'https://github.com/olujlab/DevOpsClassCode.git'
             }
         }
         stage('Compile'){
@@ -27,9 +27,9 @@ new commit  pipeline{
             }
         }
         stage('UnitTest'){
-            agent {label 'win_slave'}
+            agent {label 'slave2'}
             steps{
-                git 'https://github.com/devops-trainer/DevOpsClassCodes.git'
+                git 'https://github.com/olujlab/DevOpsClassCode.git'
                 bat 'mvn test'
             }
         }
@@ -40,7 +40,7 @@ new commit  pipeline{
             }
         }
         stage('Package'){
-            agent{label 'win_slave'}
+            agent{label 'slave1'}
             steps{
                 bat 'mvn package'
             }
