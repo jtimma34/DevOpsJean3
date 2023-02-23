@@ -1,50 +1,49 @@
-
 pipeline{
-
-   agent any
-
-	//create dockerhub credential in github with your dockerhub Username and Password/Token
-	environment {
-		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
-	}
-	
-	stages {
-
-		stage('gitclone') {
-
-		      steps {
-		         git 'https://github.com/theitern/DevOpsClassCode.git'
-		      }
-		}
-		
-		stage('Build') {
-			steps {
-			
-			   sh 'docker build -t akinaregbesola/class_app:${BUILD_NUMBER} .'
-			}
-		}
-		
-		stage('Login') {
-		
-			steps {
-			   sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login --username akinaregbesola --password-stdin'    
-			}
-		}
-
-		stage('Push') {
-			
-			steps {
-			   sh 'docker push akinaregbesola/class_app:${BUILD_NUMBER}'
-			}
-		}
-		}
-	
-	post {
-	    always {
-		sh 'docker logout'
-	    }
-    }
-
-}
-
-
+            tools{
+                jdk 'ourjava'
+                maven 'ourmaven'
+            }
+            agent none
+            stages{
+                stage('Checkout'){
+                    agent any
+                    steps{
+                echo 'cloning...'
+                        git 'https://github.com/theitern/DevOpsClassCodes.git'
+                    }
+                }
+                stage('Compile'){
+                    agent {label 'Slave1'}
+                    steps{
+                        echo 'compiling...'
+                        sh 'mvn compile'
+                }
+                }
+                stage('CodeReview'){
+                    agent {label 'Slave1'}
+                    steps{
+                    
+                echo 'codeReview...'
+                        sh 'mvn pmd:pmd'
+                    }
+                }
+                stage('UnitTest'){
+                    agent {label 'Slave2'}
+                    steps{
+                    echo 'Testing'
+                        sh 'mvn test'
+                    }
+                    post {
+                    success {
+                        junit 'target/surefire-reports/*.xml'
+                    }
+                }	
+                }
+                stage('Package'){
+                    agent any
+                    steps{
+                        sh 'mvn package'
+                    }
+                }
+            }
+        }
