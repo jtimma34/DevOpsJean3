@@ -12,14 +12,14 @@ pipeline{
                         git 'https://github.com/olujlab/DevOpsClassCode.git'
                     }
                 }
-                stage('Compile'){
+                stage('I am doing Compile'){
                     agent {label 'slave1'}
                     steps{
                         echo 'compiling...'
                         sh 'mvn compile'
                 }
                 }
-                stage('CodeReview'){
+                stage('I am doing CodeReview'){
                     agent {label 'slave1'}
                     steps{
                     
