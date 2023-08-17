@@ -5,29 +5,29 @@ pipeline{
             }
             agent none
             stages{
-                stage('Checkout'){
+                stage('Checkout on Master'){
                     agent any
                     steps{
                 echo 'cloning...'
-                        git 'https://github.com/olujlab/DevOpsClassCode.git'
+                        git 'https://github.com/RayItern/DevOpsCodeDemo-1.git'
                     }
                 }
-                stage('I am doing Compile'){
+                stage('Compile on Slave1'){
                     agent {label 'slave1'}
                     steps{
                         echo 'compiling...'
                         sh 'mvn compile'
                 }
                 }
-                stage('I am doing CodeReview'){
-                    agent {label 'slave1'}
+                stage('CodeReview on Slave2'){
+                    agent {label 'slave2'}
                     steps{
                     
                 echo 'codeReview...'
                         sh 'mvn pmd:pmd'
                     }
                 }
-                stage('UnitTest'){
+                stage('UnitTest on Slave2'){
                     agent {label 'slave2'}
                     steps{
                     echo 'Testing'
@@ -39,7 +39,7 @@ pipeline{
                     }
                 }	
                 }
-                stage('Package'){
+                stage('Package on Master'){
                     agent any
                     steps{
                         sh 'mvn package'
