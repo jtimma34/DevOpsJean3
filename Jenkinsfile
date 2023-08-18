@@ -19,14 +19,7 @@ pipeline{
                         sh 'mvn compile'
                 }
                 }
-                stage('CodeReview on Slave2'){
-                    agent {label 'slave2'}
-                    steps{
-                    
-                echo 'codeReview...'
-                        sh 'mvn pmd:pmd'
-                    }
-                }
+               
                 stage('UnitTest on Slave2'){
                     agent {label 'slave2'}
                     steps{
